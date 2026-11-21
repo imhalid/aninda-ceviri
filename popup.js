@@ -1,31 +1,180 @@
-const ENGINE_HINTS = {
-  auto: 'Önce Apple Yerel, yoksa Google',
-  apple: 'Yalnızca Mac üzerinde çevrimdışı',
-  google: 'Tüm diller için çevrimiçi'
-};
-
-const THEME_HINTS = {
-  auto: 'Sistem teması',
-  light: 'Her zaman açık',
-  dark: 'Her zaman koyu'
+const I18N = {
+  tr: {
+    appTitle: 'Anında Çeviri',
+    checking: 'Kontrol ediliyor',
+    shortcutTitle: 'Hızlı Kısayol',
+    tabPage: 'Sayfa',
+    tabQuick: 'Sözlük',
+    tabSettings: 'Ayarlar',
+    engineLabel: 'Motor',
+    engineAuto: 'Akıllı',
+    engineApple: 'Apple Yerel',
+    engineGoogle: 'Google',
+    engineHintAuto: 'Önce Apple Yerel, yoksa Google',
+    engineHintApple: 'Yalnızca Mac üzerinde çevrimdışı',
+    engineHintGoogle: 'Tüm diller için çevrimiçi',
+    targetLangLabel: 'Hedef Dil',
+    translatePageBtn: 'Sayfayı Çevir',
+    stopRevertBtn: 'Durdur ve Geri Al',
+    retranslateBtn: 'Yeni Ayarla Çevir',
+    revertBtn: 'Orijinal Sayfaya Dön',
+    blockedBtn: 'Bu Sayfa Çevrilemez',
+    quickPlaceholder: 'Kelime veya cümle yazın…',
+    clearBtn: 'Temizle',
+    translateBtn: 'Çevir',
+    listenTitle: 'Sesli Dinle',
+    copyTitle: 'Kopyala',
+    appearanceLabel: 'Görünüm',
+    themeAuto: 'Sistem',
+    themeLight: 'Açık',
+    themeDark: 'Koyu',
+    themeHintAuto: 'Sistem teması',
+    themeHintLight: 'Her zaman açık',
+    themeHintDark: 'Her zaman koyu',
+    uiLangLabel: 'Arayüz Dili',
+    uiLangAuto: 'Oto',
+    uiLangHintAuto: 'Tarayıcı dili',
+    uiLangHintTr: 'Türkçe',
+    uiLangHintEn: 'English',
+    optObserveTitle: 'Dinamik içerik takibi',
+    optObserveSub: 'Kaydırdıkça yeni metinleri çevir',
+    optBubbleTitle: 'Seçili kelime balonu',
+    optBubbleSub: 'Metin seçince çeviri balonu göster',
+    optTitleTitle: 'Sekme başlığını çevir',
+    optTitleSub: 'Tarayıcı sekme başlığını da güncelle',
+    offlinePacksLabel: 'Apple Çevrimdışı Dilleri',
+    bridgeTitle: 'Apple Yerel Köprüsü (Mac)',
+    bridgeNotInstalled: 'Kurulu değil',
+    bridgeDesc: "Çevrimdışı Apple Çeviri için aşağıdaki tek komutu Mac Terminal'e yapıştırıp çalıştırın:",
+    copyCmdBtn: 'Komutu Kopyala',
+    copiedBtn: 'Kopyalandı ✓',
+    copyFailBtn: 'Kopyalanamadı',
+    testConnBtn: 'Bağlantıyı Test Et',
+    testingBtn: 'Kontrol ediliyor…',
+    connectedBtn: 'Bağlandı ✓',
+    notFoundBtn: 'Bulunamadı',
+    packsTitle: 'Çevrimdışı Diller',
+    refreshTitle: 'Durumu Yenile',
+    systemBtn: 'Sistem',
+    appleOfflineActive: 'Apple Yerel • Çevrimdışı',
+    googleActive: 'Google Çeviri • Aktif',
+    appleReady: 'Apple Yerel Hazır',
+    googleReady: 'Google Çeviri Hazır',
+    translatedWith: (engine, count) => `${engine} ile ${count} metin çevrildi`,
+    fallbackNotInstalled: (pair) =>
+      pair
+        ? `${pair} paketi Mac'te yüklü değil, Google kullanıldı.`
+        : `Dil paketi Mac'te yüklü değil, Google kullanıldı.`,
+    fallbackUnsupported: 'Bu dil çifti Apple Yerel tarafından desteklenmediği için Google kullanıldı.',
+    downloadAction: 'İndir',
+    confirmAction: 'Onaylayın…',
+    installedBadge: 'Yüklü',
+    packsCount: (inst, total) => `${inst}/${total} Yüklü`,
+    packsSubText: (target) => `Hedef dil (${target}) için Mac üzerindeki çevrimdışı paketler.`,
+    noTabErr: 'Aktif sekme bulunamadı.',
+    restrictedErr: 'Sistem sayfaları çevrilemez; Sözlük sekmesini kullanabilirsiniz.',
+    accessErr: 'Sayfaya erişilemiyor. Sayfayı yenileyip tekrar deneyin.',
+    translateFailErr: 'Sayfa çevrilemedi.',
+    genericErr: 'Çeviri sırasında hata oluştu.',
+    srcAuto: 'OTO'
+  },
+  en: {
+    appTitle: 'Instant Translator',
+    checking: 'Checking…',
+    shortcutTitle: 'Quick Shortcut',
+    tabPage: 'Page',
+    tabQuick: 'Dictionary',
+    tabSettings: 'Settings',
+    engineLabel: 'Engine',
+    engineAuto: 'Smart',
+    engineApple: 'Apple Local',
+    engineGoogle: 'Google',
+    engineHintAuto: 'Apple Local first, Google fallback',
+    engineHintApple: 'Offline on this Mac only',
+    engineHintGoogle: 'Online for all languages',
+    targetLangLabel: 'Target Language',
+    translatePageBtn: 'Translate Page',
+    stopRevertBtn: 'Stop & Revert',
+    retranslateBtn: 'Apply & Retranslate',
+    revertBtn: 'Revert to Original',
+    blockedBtn: 'Cannot Translate Page',
+    quickPlaceholder: 'Type a word or sentence…',
+    clearBtn: 'Clear',
+    translateBtn: 'Translate',
+    listenTitle: 'Listen',
+    copyTitle: 'Copy',
+    appearanceLabel: 'Appearance',
+    themeAuto: 'System',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeHintAuto: 'Follows system',
+    themeHintLight: 'Always light',
+    themeHintDark: 'Always dark',
+    uiLangLabel: 'Interface Language',
+    uiLangAuto: 'Auto',
+    uiLangHintAuto: 'Browser language',
+    uiLangHintTr: 'Türkçe',
+    uiLangHintEn: 'English',
+    optObserveTitle: 'Track dynamic content',
+    optObserveSub: 'Translate new items as you scroll',
+    optBubbleTitle: 'Selection lookup bubble',
+    optBubbleSub: 'Show translate button on text selection',
+    optTitleTitle: 'Translate tab title',
+    optTitleSub: 'Update browser tab title as well',
+    offlinePacksLabel: 'Apple Offline Languages',
+    bridgeTitle: 'Apple Local Bridge (Mac)',
+    bridgeNotInstalled: 'Not installed',
+    bridgeDesc: 'Paste and run this single command in Mac Terminal to enable offline Apple Translation:',
+    copyCmdBtn: 'Copy Command',
+    copiedBtn: 'Copied ✓',
+    copyFailBtn: 'Copy failed',
+    testConnBtn: 'Test Connection',
+    testingBtn: 'Checking…',
+    connectedBtn: 'Connected ✓',
+    notFoundBtn: 'Not found',
+    packsTitle: 'Offline Languages',
+    refreshTitle: 'Refresh Status',
+    systemBtn: 'System',
+    appleOfflineActive: 'Apple Local • Offline',
+    googleActive: 'Google Translate • Active',
+    appleReady: 'Apple Local Ready',
+    googleReady: 'Google Translate Ready',
+    translatedWith: (engine, count) => `Translated ${count} items via ${engine}`,
+    fallbackNotInstalled: (pair) =>
+      pair
+        ? `${pair} pack isn't installed on Mac; used Google.`
+        : `Language pack isn't installed on Mac; used Google.`,
+    fallbackUnsupported: 'Language pair unsupported by Apple Local; used Google.',
+    downloadAction: 'Download',
+    confirmAction: 'Confirm…',
+    installedBadge: 'Installed',
+    packsCount: (inst, total) => `${inst}/${total} Installed`,
+    packsSubText: (target) => `Offline packs on this Mac for target (${target}).`,
+    noTabErr: 'No active tab found.',
+    restrictedErr: 'System pages cannot be translated; use the Dictionary tab.',
+    accessErr: 'Cannot access this page. Reload and try again.',
+    translateFailErr: 'Could not translate page.',
+    genericErr: 'An error occurred while translating.',
+    srcAuto: 'AUTO'
+  }
 };
 
 const LANGUAGES = [
-  ['tr', 'TR', 'Türkçe'],
-  ['en', 'EN', 'İngilizce'],
-  ['de', 'DE', 'Almanca'],
-  ['fr', 'FR', 'Fransızca'],
-  ['es', 'ES', 'İspanyolca'],
-  ['it', 'IT', 'İtalyanca'],
-  ['pt', 'PT', 'Portekizce'],
-  ['ru', 'RU', 'Rusça'],
-  ['ar', 'AR', 'Arapça'],
-  ['ja', 'JA', 'Japonca'],
-  ['ko', 'KO', 'Korece'],
-  ['zh-CN', 'ZH', 'Çince'],
-  ['nl', 'NL', 'Felemenkçe'],
-  ['pl', 'PL', 'Lehçe'],
-  ['uk', 'UK', 'Ukraynaca']
+  ['tr', 'TR', { tr: 'Türkçe', en: 'Turkish' }],
+  ['en', 'EN', { tr: 'İngilizce', en: 'English' }],
+  ['de', 'DE', { tr: 'Almanca', en: 'German' }],
+  ['fr', 'FR', { tr: 'Fransızca', en: 'French' }],
+  ['es', 'ES', { tr: 'İspanyolca', en: 'Spanish' }],
+  ['it', 'IT', { tr: 'İtalyanca', en: 'Italian' }],
+  ['pt', 'PT', { tr: 'Portekizce', en: 'Portuguese' }],
+  ['ru', 'RU', { tr: 'Rusça', en: 'Russian' }],
+  ['ar', 'AR', { tr: 'Arapça', en: 'Arabic' }],
+  ['ja', 'JA', { tr: 'Japonca', en: 'Japanese' }],
+  ['ko', 'KO', { tr: 'Korece', en: 'Korean' }],
+  ['zh-CN', 'ZH', { tr: 'Çince', en: 'Chinese' }],
+  ['nl', 'NL', { tr: 'Felemenkçe', en: 'Dutch' }],
+  ['pl', 'PL', { tr: 'Lehçe', en: 'Polish' }],
+  ['uk', 'UK', { tr: 'Ukraynaca', en: 'Ukrainian' }]
 ];
 
 const SPEECH_LOCALE = {
@@ -46,20 +195,37 @@ const SPEECH_LOCALE = {
   uk: 'uk-UA'
 };
 
-const POS_TR = {
-  noun: 'İsim',
-  verb: 'Fiil',
-  adjective: 'Sıfat',
-  adverb: 'Zarf',
-  pronoun: 'Zamir',
-  preposition: 'Edat',
-  conjunction: 'Bağlaç',
-  interjection: 'Ünlem',
-  exclamation: 'Ünlem',
-  abbreviation: 'Kısaltma',
-  article: 'Tanımlık',
-  determiner: 'Belirteç',
-  particle: 'İlgeç'
+const POS_LABELS = {
+  tr: {
+    noun: 'İsim',
+    verb: 'Fiil',
+    adjective: 'Sıfat',
+    adverb: 'Zarf',
+    pronoun: 'Zamir',
+    preposition: 'Edat',
+    conjunction: 'Bağlaç',
+    interjection: 'Ünlem',
+    exclamation: 'Ünlem',
+    abbreviation: 'Kısaltma',
+    article: 'Tanımlık',
+    determiner: 'Belirteç',
+    particle: 'İlgeç'
+  },
+  en: {
+    noun: 'Noun',
+    verb: 'Verb',
+    adjective: 'Adjective',
+    adverb: 'Adverb',
+    pronoun: 'Pronoun',
+    preposition: 'Preposition',
+    conjunction: 'Conjunction',
+    interjection: 'Interjection',
+    exclamation: 'Exclamation',
+    abbreviation: 'Abbreviation',
+    article: 'Article',
+    determiner: 'Determiner',
+    particle: 'Particle'
+  }
 };
 
 const COPY_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
@@ -82,6 +248,10 @@ const engineButtons = Array.from(document.querySelectorAll('#engineSegment .seg-
 const themeSegment = document.getElementById('themeSegment');
 const themeHint = document.getElementById('themeHint');
 const themeButtons = Array.from(document.querySelectorAll('#themeSegment .seg-btn'));
+
+const uiLangSegment = document.getElementById('uiLangSegment');
+const uiLangHint = document.getElementById('uiLangHint');
+const uiLangButtons = Array.from(document.querySelectorAll('#uiLangSegment .seg-btn'));
 
 const langSelectWrap = document.getElementById('langSelect');
 const langTrigger = document.getElementById('langTrigger');
@@ -110,6 +280,7 @@ const packsRefreshBtn = document.getElementById('packsRefreshBtn');
 const packsSettingsBtn = document.getElementById('packsSettingsBtn');
 const packsSub = document.getElementById('packsSub');
 const packsList = document.getElementById('packsList');
+
 const bridgeSetupCard = document.getElementById('bridgeSetupCard');
 const bridgeCmdText = document.getElementById('bridgeCmdText');
 const copyBridgeBtn = document.getElementById('copyBridgeBtn');
@@ -131,13 +302,19 @@ let activeTabId = null;
 let appleHostReady = false;
 let currentEngine = 'auto';
 let currentTheme = 'auto';
+let currentUiLangSetting = 'auto';
+let resolvedUiLang = 'en';
 let currentTargetLang = 'tr';
 let currentTabMode = 'page';
 let packsOpen = false;
 let packsPollTimer = null;
 let downloadingCode = null;
+let cachedPacks = null;
 let pageBlocked = false;
+let pageBlockedReason = null;
 let lastQuickResult = '';
+let lastQuickDict = [];
+let lastQuickDetected = '';
 
 let pageState = {
   isTranslated: false,
@@ -151,6 +328,78 @@ let pageState = {
   progress: 0
 };
 
+function t(key) {
+  return I18N[resolvedUiLang]?.[key] ?? I18N.en[key] ?? key;
+}
+
+function resolveUiLang(setting) {
+  if (setting === 'tr' || setting === 'en') return setting;
+  const nav = (navigator.language || 'en').toLowerCase();
+  return nav.startsWith('tr') ? 'tr' : 'en';
+}
+
+function formatLocalizedLangName(code, fallbackName) {
+  try {
+    const dn = new Intl.DisplayNames([resolvedUiLang], { type: 'language' });
+    const formatted = dn.of(code);
+    if (formatted) {
+      return formatted.charAt(0).toLocaleUpperCase(resolvedUiLang) + formatted.slice(1);
+    }
+  } catch {
+    // Fallback below
+  }
+  return fallbackName || code;
+}
+
+function applyUiLanguage(setting) {
+  currentUiLangSetting = setting || 'auto';
+  resolvedUiLang = resolveUiLang(currentUiLangSetting);
+  document.documentElement.lang = resolvedUiLang;
+
+  const idxMap = { auto: '0', tr: '1', en: '2' };
+  uiLangSegment.dataset.index = idxMap[currentUiLangSetting] || '0';
+  uiLangButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.uiLang === currentUiLangSetting);
+  });
+
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const val = t(el.dataset.i18n);
+    if (typeof val === 'string') el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    const val = t(el.dataset.i18nPlaceholder);
+    if (typeof val === 'string') el.placeholder = val;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+    const val = t(el.dataset.i18nTitle);
+    if (typeof val === 'string') el.title = val;
+  });
+
+  const hintKey = {
+    auto: 'uiLangHintAuto',
+    tr: 'uiLangHintTr',
+    en: 'uiLangHintEn'
+  }[currentUiLangSetting];
+  uiLangHint.textContent = t(hintKey || 'uiLangHintAuto');
+
+  setSelectedEngine(currentEngine);
+  applyTheme(currentTheme);
+  setTargetLang(currentTargetLang);
+  if (!lastQuickDetected) {
+    quickSrcBadge.textContent = t('srcAuto');
+  }
+  if (lastQuickDict.length > 0) {
+    renderQuickDict(lastQuickDict);
+  }
+  if (cachedPacks) {
+    renderPacksList(cachedPacks, currentTargetLang);
+  }
+  if (pageBlocked && pageBlockedReason) {
+    showMessage(t(pageBlockedReason), pageBlockedReason === 'restrictedErr');
+  }
+  renderUI();
+}
+
 const systemDarkMedia = window.matchMedia('(prefers-color-scheme: dark)');
 
 function applyTheme(theme) {
@@ -162,7 +411,10 @@ function applyTheme(theme) {
         : 'light'
       : currentTheme;
   document.documentElement.setAttribute('data-theme', resolved);
-  themeHint.textContent = THEME_HINTS[currentTheme] || THEME_HINTS.auto;
+  const hintKey = { auto: 'themeHintAuto', light: 'themeHintLight', dark: 'themeHintDark' }[
+    currentTheme
+  ];
+  themeHint.textContent = t(hintKey || 'themeHintAuto');
   const idxMap = { auto: '0', light: '1', dark: '2' };
   themeSegment.dataset.index = idxMap[currentTheme] || '0';
   themeButtons.forEach((btn) => {
@@ -206,7 +458,12 @@ function showMessage(text, isInfo = false, actionLabel = null, onAction = null) 
 
 function setSelectedEngine(engine) {
   currentEngine = engine || 'auto';
-  engineHint.textContent = ENGINE_HINTS[currentEngine] || ENGINE_HINTS.auto;
+  const hintKey = {
+    auto: 'engineHintAuto',
+    apple: 'engineHintApple',
+    google: 'engineHintGoogle'
+  }[currentEngine];
+  engineHint.textContent = t(hintKey || 'engineHintAuto');
   const idxMap = { auto: '0', apple: '1', google: '2' };
   engineSegment.dataset.index = idxMap[currentEngine] || '0';
   engineButtons.forEach((btn) => {
@@ -216,7 +473,8 @@ function setSelectedEngine(engine) {
 
 function renderLangMenu() {
   langMenu.innerHTML = '';
-  for (const [code, shortCode, label] of LANGUAGES) {
+  for (const [code, shortCode, labels] of LANGUAGES) {
+    const label = labels[resolvedUiLang] || labels.en;
     const opt = document.createElement('button');
     opt.type = 'button';
     opt.role = 'option';
@@ -246,7 +504,7 @@ function setTargetLang(code) {
   const found = LANGUAGES.find(([c]) => c === code) || LANGUAGES[0];
   currentTargetLang = found[0];
   langCodePill.textContent = found[1];
-  langLabelText.textContent = found[2];
+  langLabelText.textContent = found[2][resolvedUiLang] || found[2].en;
   renderLangMenu();
 }
 
@@ -265,18 +523,16 @@ function updateSubtitle() {
   if (pageState.isTranslated && pageState.usedEngine) {
     statusDot.classList.add('ready');
     engineStatusText.textContent =
-      pageState.usedEngine === 'apple'
-        ? 'Apple Yerel • Çevrimdışı'
-        : 'Google Çeviri • Aktif';
+      pageState.usedEngine === 'apple' ? t('appleOfflineActive') : t('googleActive');
     return;
   }
 
   if (appleHostReady) {
     statusDot.classList.add('ready');
-    engineStatusText.textContent = 'Apple Yerel Hazır';
+    engineStatusText.textContent = t('appleReady');
   } else {
     statusDot.classList.remove('ready');
-    engineStatusText.textContent = 'Google Çeviri Hazır';
+    engineStatusText.textContent = t('googleReady');
   }
 }
 
@@ -286,19 +542,14 @@ function renderFallbackHint() {
     const pair = pageState.fallbackPair || '';
     const srcCode = pair.split('→')[0]?.trim();
     const tgtCode = pair.split('→')[1]?.trim() || currentTargetLang;
-    const msg = pair
-      ? `${pair} paketi Mac'te yüklü değil, Google kullanıldı.`
-      : `Dil paketi Mac'te yüklü değil, Google kullanıldı.`;
+    const msg = t('fallbackNotInstalled')(pair);
     if (appleHostReady && srcCode) {
-      showMessage(msg, true, 'İndir', () => triggerPackDownload(srcCode, tgtCode));
+      showMessage(msg, true, t('downloadAction'), () => triggerPackDownload(srcCode, tgtCode));
     } else {
       showMessage(msg, true);
     }
   } else if (pageState.fallbackReason === 'UNSUPPORTED') {
-    showMessage(
-      'Bu dil çifti Apple Yerel tarafından desteklenmediği için Google kullanıldı.',
-      true
-    );
+    showMessage(t('fallbackUnsupported'), true);
   }
 }
 
@@ -308,7 +559,7 @@ function renderUI() {
   if (pageBlocked) {
     translatedBanner.classList.add('hidden');
     actionBtn.disabled = true;
-    actionBtnText.textContent = 'Bu Sayfa Çevrilemez';
+    actionBtnText.textContent = t('blockedBtn');
     actionBtn.className = 'btn btn-secondary';
     progressWrap.classList.add('hidden');
     return;
@@ -318,15 +569,15 @@ function renderUI() {
 
   if (pageState.isTranslating) {
     translatedBanner.classList.add('hidden');
-    actionBtnText.textContent = 'Durdur ve Geri Al';
+    actionBtnText.textContent = t('stopRevertBtn');
     actionBtn.className = 'btn btn-secondary';
     progressWrap.classList.remove('hidden');
     const pct = Math.max(5, Math.min(100, pageState.progress || 0));
     progressBar.style.width = `${pct}%`;
     progressText.textContent = `%${pct}`;
   } else if (pageState.isTranslated) {
-    const engineName = pageState.usedEngine === 'apple' ? 'Apple Yerel' : 'Google';
-    translatedBannerText.textContent = `${engineName} ile ${pageState.translatedCount} metin çevrildi`;
+    const engineName = pageState.usedEngine === 'apple' ? t('engineApple') : t('engineGoogle');
+    translatedBannerText.textContent = t('translatedWith')(engineName, pageState.translatedCount);
     translatedBanner.classList.remove('hidden');
     progressWrap.classList.add('hidden');
 
@@ -334,17 +585,17 @@ function renderUI() {
       currentTargetLang !== pageState.targetLang ||
       currentEngine !== pageState.engine
     ) {
-      actionBtnText.textContent = 'Yeni Ayarla Çevir';
+      actionBtnText.textContent = t('retranslateBtn');
       actionBtn.className = 'btn btn-primary';
     } else {
-      actionBtnText.textContent = 'Orijinal Sayfaya Dön';
+      actionBtnText.textContent = t('revertBtn');
       actionBtn.className = 'btn btn-secondary';
     }
 
     renderFallbackHint();
   } else {
     translatedBanner.classList.add('hidden');
-    actionBtnText.textContent = 'Sayfayı Çevir';
+    actionBtnText.textContent = t('translatePageBtn');
     actionBtn.className = 'btn btn-primary';
     progressWrap.classList.add('hidden');
   }
@@ -378,11 +629,14 @@ function switchTab(tab) {
 }
 
 function renderPacksList(packs, targetCode) {
+  cachedPacks = packs;
   const installedCount = packs.filter((p) => p.status === 'installed').length;
-  packsSummary.textContent = `${installedCount}/${packs.length} Yüklü`;
+  packsSummary.textContent = t('packsCount')(installedCount, packs.length);
   const targetFound = LANGUAGES.find(([c]) => c === currentTargetLang);
-  const targetLabel = targetFound ? targetFound[2] : (targetCode || 'TR').toUpperCase();
-  packsSub.textContent = `Hedef dil (${targetLabel}) için Mac üzerindeki çevrimdışı paketler.`;
+  const targetLabel = targetFound
+    ? targetFound[2][resolvedUiLang] || targetFound[2].en
+    : (targetCode || 'TR').toUpperCase();
+  packsSub.textContent = t('packsSubText')(targetLabel);
 
   packsList.innerHTML = '';
   packs.forEach((pack, index) => {
@@ -402,7 +656,7 @@ function renderPacksList(packs, targetCode) {
     pill.textContent = pack.code.toUpperCase();
     const name = document.createElement('span');
     name.className = 'pack-name';
-    name.textContent = pack.name;
+    name.textContent = formatLocalizedLangName(pack.code, pack.name);
     left.append(pill, name);
 
     row.appendChild(left);
@@ -410,14 +664,14 @@ function renderPacksList(packs, targetCode) {
     if (pack.status === 'installed') {
       const badge = document.createElement('span');
       badge.className = 'pack-installed';
-      badge.innerHTML = `${CHECK_SVG}<span>Yüklü</span>`;
+      badge.innerHTML = `${CHECK_SVG}<span>${t('installedBadge')}</span>`;
       row.appendChild(badge);
     } else {
       const dlBtn = document.createElement('button');
       dlBtn.type = 'button';
       dlBtn.className = 'pack-dl-btn';
       const isPending = downloadingCode === pack.code;
-      dlBtn.textContent = isPending ? 'Onaylayın…' : 'İndir';
+      dlBtn.textContent = isPending ? t('confirmAction') : t('downloadAction');
       dlBtn.disabled = isPending;
       dlBtn.addEventListener('click', () => triggerPackDownload(pack.code, targetCode || currentTargetLang));
       row.appendChild(dlBtn);
@@ -512,6 +766,38 @@ async function checkAppleHost() {
   updateSubtitle();
 }
 
+function renderQuickDict(dict) {
+  quickDict.innerHTML = '';
+  const posMap = POS_LABELS[resolvedUiLang] || POS_LABELS.en;
+  for (const group of dict) {
+    const block = document.createElement('div');
+    const pos = document.createElement('div');
+    pos.className = 'dict-pos';
+    pos.textContent = posMap[group.pos.toLowerCase()] || group.pos;
+
+    const chips = document.createElement('div');
+    chips.className = 'dict-chips';
+    for (const term of group.terms || []) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'dict-chip';
+      chip.textContent = term;
+      chip.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(term);
+          chip.textContent = `${term} ✓`;
+          setTimeout(() => (chip.textContent = term), 900);
+        } catch {
+          // Ignore
+        }
+      });
+      chips.appendChild(chip);
+    }
+    block.append(pos, chips);
+    quickDict.appendChild(block);
+  }
+}
+
 async function runQuickTranslate() {
   const text = quickInput.value.trim();
   if (!text) return;
@@ -529,11 +815,12 @@ async function runQuickTranslate() {
     });
 
     if (!res?.ok) {
-      throw new Error(res?.error || 'Çeviri yapılamadı');
+      throw new Error(res?.error || t('genericErr'));
     }
 
     lastQuickResult = res.translated || '';
-    quickSrcBadge.textContent = (res.detectedSource || 'OTO').toUpperCase();
+    lastQuickDetected = res.detectedSource || '';
+    quickSrcBadge.textContent = (lastQuickDetected || t('srcAuto')).toUpperCase();
     if (res.phonetic) {
       quickPhonetic.textContent = `/${res.phonetic}/`;
       quickPhonetic.classList.remove('hidden');
@@ -542,46 +829,17 @@ async function runQuickTranslate() {
     }
 
     quickTranslation.textContent = lastQuickResult;
-    quickDict.innerHTML = '';
-
-    if (Array.isArray(res.dict) && res.dict.length > 0) {
-      for (const group of res.dict) {
-        const block = document.createElement('div');
-        const pos = document.createElement('div');
-        pos.className = 'dict-pos';
-        pos.textContent = POS_TR[group.pos.toLowerCase()] || group.pos;
-
-        const chips = document.createElement('div');
-        chips.className = 'dict-chips';
-        for (const term of group.terms || []) {
-          const chip = document.createElement('button');
-          chip.type = 'button';
-          chip.className = 'dict-chip';
-          chip.textContent = term;
-          chip.addEventListener('click', async () => {
-            try {
-              await navigator.clipboard.writeText(term);
-              chip.textContent = `${term} ✓`;
-              setTimeout(() => (chip.textContent = term), 900);
-            } catch {
-              // Ignore
-            }
-          });
-          chips.appendChild(chip);
-        }
-        block.append(pos, chips);
-        quickDict.appendChild(block);
-      }
-    }
+    lastQuickDict = Array.isArray(res.dict) ? res.dict : [];
+    renderQuickDict(lastQuickDict);
 
     quickResultCard.classList.remove('hidden');
   } catch (err) {
     quickResultCard.classList.add('hidden');
-    quickError.textContent = err?.message || 'Çeviri sırasında hata oluştu.';
+    quickError.textContent = err?.message || t('genericErr');
     quickError.classList.remove('hidden');
   } finally {
     quickTranslateBtn.disabled = false;
-    quickTranslateBtn.textContent = 'Çevir';
+    quickTranslateBtn.textContent = t('translateBtn');
   }
 }
 
@@ -592,22 +850,26 @@ async function init() {
     selectionPopup: true,
     translateTitle: true,
     theme: 'auto',
+    uiLang: 'auto',
     engine: 'auto'
   });
 
-  applyTheme(stored.theme || 'auto');
-  setTargetLang(stored.targetLang || 'tr');
+  currentTheme = stored.theme || 'auto';
+  currentTargetLang = stored.targetLang || 'tr';
+  currentEngine = stored.engine || 'auto';
   autoObserveEl.checked = Boolean(stored.autoObserve);
   selectionPopupEl.checked = Boolean(stored.selectionPopup);
   translateTitleEl.checked = Boolean(stored.translateTitle);
-  setSelectedEngine(stored.engine || 'auto');
+
+  applyUiLanguage(stored.uiLang || 'auto');
 
   checkAppleHost();
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id || !tab.url) {
     pageBlocked = true;
-    showMessage('Aktif sekme bulunamadı.');
+    pageBlockedReason = 'noTabErr';
+    showMessage(t('noTabErr'));
     renderUI();
     return;
   }
@@ -618,7 +880,8 @@ async function init() {
 
   if (restricted) {
     pageBlocked = true;
-    showMessage('Sistem sayfaları çevrilemez; Sözlük sekmesini kullanabilirsiniz.', true);
+    pageBlockedReason = 'restrictedErr';
+    showMessage(t('restrictedErr'), true);
     renderUI();
     return;
   }
@@ -646,7 +909,8 @@ async function init() {
     }
   } catch {
     pageBlocked = true;
-    showMessage('Sayfaya erişilemiyor. Sayfayı yenileyip tekrar deneyin.');
+    pageBlockedReason = 'accessErr';
+    showMessage(t('accessErr'));
   }
 
   renderUI();
@@ -669,21 +933,21 @@ packsSettingsBtn.addEventListener('click', () => {
 copyBridgeBtn.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(bridgeCmdText.textContent.trim());
-    copyBridgeBtn.textContent = 'Kopyalandı ✓';
-    setTimeout(() => (copyBridgeBtn.textContent = 'Komutu Kopyala'), 1500);
+    copyBridgeBtn.textContent = t('copiedBtn');
+    setTimeout(() => (copyBridgeBtn.textContent = t('copyCmdBtn')), 1500);
   } catch {
-    copyBridgeBtn.textContent = 'Kopyalanamadı';
+    copyBridgeBtn.textContent = t('copyFailBtn');
   }
 });
 
 recheckBridgeBtn.addEventListener('click', async () => {
   recheckBridgeBtn.disabled = true;
-  recheckBridgeBtn.textContent = 'Kontrol ediliyor…';
+  recheckBridgeBtn.textContent = t('testingBtn');
   await checkAppleHost();
   recheckBridgeBtn.disabled = false;
-  recheckBridgeBtn.textContent = appleHostReady ? 'Bağlandı ✓' : 'Bulunamadı';
+  recheckBridgeBtn.textContent = appleHostReady ? t('connectedBtn') : t('notFoundBtn');
   setTimeout(() => {
-    recheckBridgeBtn.textContent = 'Bağlantıyı Test Et';
+    recheckBridgeBtn.textContent = t('testConnBtn');
   }, 1500);
 });
 
@@ -722,6 +986,14 @@ themeButtons.forEach((btn) => {
     const theme = btn.dataset.themeChoice;
     applyTheme(theme);
     await chrome.storage.local.set({ theme });
+  });
+});
+
+uiLangButtons.forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const uiLang = btn.dataset.uiLang;
+    applyUiLanguage(uiLang);
+    await chrome.storage.local.set({ uiLang });
   });
 });
 
@@ -787,7 +1059,7 @@ actionBtn.addEventListener('click', async () => {
     });
   } catch (err) {
     pageState.isTranslating = false;
-    showMessage(err?.message || 'Sayfa çevrilemedi.');
+    showMessage(err?.message || t('translateFailErr'));
     renderUI();
   }
 });
@@ -853,7 +1125,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     renderUI();
   } else if (message?.type === 'TRANSLATION_ERROR') {
     pageState.isTranslating = false;
-    showMessage(message.error || 'Çeviri sırasında hata oluştu.');
+    showMessage(message.error || t('genericErr'));
     renderUI();
   }
 });

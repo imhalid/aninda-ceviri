@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "Anında Sayfa Çevirici"
+  },
+  "extDesc": {
+    "message": "Bulunduğunuz web sayfasını Apple yerel çeviri motoru veya Google Çeviri ile anında ve ücretsiz çevirin."
+  },
+  "cmdToggle": {
+    "message": "Bulunduğunuz sayfayı çevir veya orijinale dön"
+  }
+}

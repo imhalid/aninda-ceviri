@@ -6,8 +6,18 @@ const DEFAULT_SETTINGS = {
   selectionPopup: true,
   translateTitle: true,
   theme: 'auto', // 'auto' | 'light' | 'dark'
+  uiLang: 'auto', // 'auto' | 'tr' | 'en'
   engine: 'auto' // 'auto' | 'apple' | 'google'
 };
+
+function resolveUiLang(uiLang) {
+  if (uiLang === 'tr' || uiLang === 'en') return uiLang;
+  try {
+    return chrome.i18n.getUILanguage().toLowerCase().startsWith('tr') ? 'tr' : 'en';
+  } catch {
+    return 'en';
+  }
+}
 
 const MAX_CACHE_SIZE = 5000;
 const translationCache = new Map();
@@ -35,6 +45,7 @@ async function getSettings() {
     translateTitle:
       typeof stored.translateTitle === 'boolean' ? stored.translateTitle : DEFAULT_SETTINGS.translateTitle,
     theme: stored.theme || DEFAULT_SETTINGS.theme,
+    uiLang: stored.uiLang || DEFAULT_SETTINGS.uiLang,
     engine: stored.engine || DEFAULT_SETTINGS.engine
   };
 }
@@ -231,16 +242,23 @@ async function translateBatchGoogle(texts, targetLang) {
   return results;
 }
 
-function formatAppleError(res) {
+function formatAppleError(res, uiLang = 'en') {
   const reason = res?.reason || '';
+  const isTr = uiLang === 'tr';
   if (reason === 'NOT_INSTALLED') {
     const pair = res.sourceLang && res.targetLang ? ` (${res.sourceLang} → ${res.targetLang})` : '';
-    return `Bu dil paketi${pair} Mac'inizde kurulu değil. Sistem Ayarları → Dil ve Bölge → Çeviri Dilleri'nden indirin veya motoru 'Akıllı' yapın.`;
+    return isTr
+      ? `Bu dil paketi${pair} Mac'inizde kurulu değil. Ayarlar → Apple Çevrimdışı Dilleri'nden indirin veya motoru 'Akıllı' yapın.`
+      : `Language pack${pair} is not installed on this Mac. Download it from Settings → Apple Offline Languages or switch to Smart mode.`;
   }
   if (reason === 'UNSUPPORTED') {
-    return `Apple yerel çeviri bu dil çiftini desteklemiyor. Motoru 'Akıllı' veya 'Google' yapın.`;
+    return isTr
+      ? `Apple yerel çeviri bu dil çiftini desteklemiyor. Motoru 'Akıllı' veya 'Google' yapın.`
+      : `Apple Local doesn't support this language pair. Switch engine to Smart or Google.`;
   }
-  return `Apple yerel çeviri başlatılamadı (${reason || 'bağlantı hatası'}).`;
+  return isTr
+    ? `Apple yerel çeviri başlatılamadı (${reason || 'bağlantı hatası'}).`
+    : `Apple Local translation unavailable (${reason || 'connection error'}).`;
 }
 
 async function translateBatchApple(texts, targetLang, pageLang) {
@@ -273,13 +291,15 @@ async function translateBatchApple(texts, targetLang, pageLang) {
   });
 
   if (!res?.ok || !Array.isArray(res.translations)) {
+    const settings = await getSettings();
+    const uiLang = resolveUiLang(settings.uiLang);
     return {
       ok: false,
       fallback: Boolean(res?.fallback),
       reason: res?.reason,
       sourceLang: res?.sourceLang,
       targetLang: res?.targetLang,
-      errorMessage: formatAppleError(res)
+      errorMessage: formatAppleError(res, uiLang)
     };
   }
 
@@ -446,19 +466,35 @@ async function toggleTranslateTab(tabId) {
   });
 }
 
-chrome.runtime.onInstalled.addListener(() => {
+async function syncContextMenus() {
+  const settings = await getSettings();
+  const isTr = resolveUiLang(settings.uiLang) === 'tr';
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'toggle-page-translate',
-      title: 'Bu Sayfayı Çevir / Orijinale Dön',
+      title: isTr ? 'Bu Sayfayı Çevir / Orijinale Dön' : 'Translate / Revert This Page',
       contexts: ['page']
     });
     chrome.contextMenus.create({
       id: 'translate-selection',
-      title: 'Seçili Metni / Kelimeyi Çevir',
+      title: isTr ? 'Seçili Metni / Kelimeyi Çevir' : 'Translate Selected Text',
       contexts: ['selection']
     });
   });
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  syncContextMenus();
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  syncContextMenus();
+});
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.uiLang) {
+    syncContextMenus();
+  }
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {

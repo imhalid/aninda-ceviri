@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "Instant Translator"
+  },
+  "extDesc": {
+    "message": "Translate the current webpage and selected words in place for free with Apple local translation or Google Translate."
+  },
+  "cmdToggle": {
+    "message": "Translate or revert current page"
+  }
+}

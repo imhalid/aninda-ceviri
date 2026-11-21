@@ -157,36 +157,92 @@
     }
   }
 
-  const POS_TR = {
-    noun: 'İsim',
-    verb: 'Fiil',
-    adjective: 'Sıfat',
-    adverb: 'Zarf',
-    pronoun: 'Zamir',
-    preposition: 'Edat',
-    conjunction: 'Bağlaç',
-    interjection: 'Ünlem',
-    exclamation: 'Ünlem',
-    abbreviation: 'Kısaltma',
-    article: 'Tanımlık',
-    determiner: 'Belirteç',
-    particle: 'İlgeç'
+  const POS_LABELS = {
+    tr: {
+      noun: 'İsim',
+      verb: 'Fiil',
+      adjective: 'Sıfat',
+      adverb: 'Zarf',
+      pronoun: 'Zamir',
+      preposition: 'Edat',
+      conjunction: 'Bağlaç',
+      interjection: 'Ünlem',
+      exclamation: 'Ünlem',
+      abbreviation: 'Kısaltma',
+      article: 'Tanımlık',
+      determiner: 'Belirteç',
+      particle: 'İlgeç'
+    },
+    en: {
+      noun: 'Noun',
+      verb: 'Verb',
+      adjective: 'Adjective',
+      adverb: 'Adverb',
+      pronoun: 'Pronoun',
+      preposition: 'Preposition',
+      conjunction: 'Conjunction',
+      interjection: 'Interjection',
+      exclamation: 'Exclamation',
+      abbreviation: 'Abbreviation',
+      article: 'Article',
+      determiner: 'Determiner',
+      particle: 'Particle'
+    }
   };
 
   const CARD_LANGS = [
-    ['tr', 'TR', 'Türkçe'],
-    ['en', 'EN', 'İngilizce'],
-    ['de', 'DE', 'Almanca'],
-    ['fr', 'FR', 'Fransızca'],
-    ['es', 'ES', 'İspanyolca'],
-    ['it', 'IT', 'İtalyanca'],
-    ['pt', 'PT', 'Portekizce'],
-    ['ru', 'RU', 'Rusça'],
-    ['ar', 'AR', 'Arapça'],
-    ['ja', 'JA', 'Japonca'],
-    ['ko', 'KO', 'Korece'],
-    ['zh-CN', 'ZH', 'Çince']
+    ['tr', 'TR', { tr: 'Türkçe', en: 'Turkish' }],
+    ['en', 'EN', { tr: 'İngilizce', en: 'English' }],
+    ['de', 'DE', { tr: 'Almanca', en: 'German' }],
+    ['fr', 'FR', { tr: 'Fransızca', en: 'French' }],
+    ['es', 'ES', { tr: 'İspanyolca', en: 'Spanish' }],
+    ['it', 'IT', { tr: 'İtalyanca', en: 'Italian' }],
+    ['pt', 'PT', { tr: 'Portekizce', en: 'Portuguese' }],
+    ['ru', 'RU', { tr: 'Rusça', en: 'Russian' }],
+    ['ar', 'AR', { tr: 'Arapça', en: 'Arabic' }],
+    ['ja', 'JA', { tr: 'Japonca', en: 'Japanese' }],
+    ['ko', 'KO', { tr: 'Korece', en: 'Korean' }],
+    ['zh-CN', 'ZH', { tr: 'Çince', en: 'Chinese' }]
   ];
+
+  const CONTENT_I18N = {
+    tr: {
+      translate: 'Çevir',
+      translating: 'Çevriliyor',
+      autoSrc: 'OTO',
+      close: 'Kapat (Esc)',
+      listen: 'Dinle',
+      listenTrg: 'Çeviriyi Dinle',
+      copy: 'Kopyala',
+      clickToCopy: 'Kopyalamak için tıklayın',
+      error: 'Hata',
+      translateFail: 'Çeviri yapılamadı.',
+      connError: 'Bağlantı hatası',
+      revertedToast: 'Orijinal sayfaya dönüldü',
+      appleLabel: 'Apple Yerel',
+      googleLabel: 'Google',
+      translatedToast: (engine, count) => `Sayfa çevrildi (${engine} • ${count} metin) ✓`,
+      errorToast: (msg) => `Hata: ${msg}`
+    },
+    en: {
+      translate: 'Translate',
+      translating: 'Translating',
+      autoSrc: 'AUTO',
+      close: 'Close (Esc)',
+      listen: 'Listen',
+      listenTrg: 'Listen to translation',
+      copy: 'Copy',
+      clickToCopy: 'Click to copy',
+      error: 'Error',
+      translateFail: 'Translation failed.',
+      connError: 'Connection error',
+      revertedToast: 'Reverted to original page',
+      appleLabel: 'Apple Local',
+      googleLabel: 'Google',
+      translatedToast: (engine, count) => `Page translated (${engine} • ${count} items) ✓`,
+      errorToast: (msg) => `Error: ${msg}`
+    }
+  };
 
   const SPEECH_LOCALE = {
     tr: 'tr-TR',
@@ -216,11 +272,24 @@
     targetLang: 'tr',
     engine: 'auto',
     theme: 'auto',
+    uiLang: 'auto',
     translateTitle: true
   };
 
   let activeSelectionMode = null; // 'trigger' | 'card' | null
   let activeThemeTarget = null; // callback to live-update open card/pill theme
+
+  function resolveUiLang() {
+    if (selectionPrefs.uiLang === 'tr' || selectionPrefs.uiLang === 'en') {
+      return selectionPrefs.uiLang;
+    }
+    return (navigator.language || 'en').toLowerCase().startsWith('tr') ? 'tr' : 'en';
+  }
+
+  function ct(key) {
+    const lang = resolveUiLang();
+    return CONTENT_I18N[lang]?.[key] ?? CONTENT_I18N.en[key] ?? key;
+  }
 
   function resolveIsDark() {
     if (selectionPrefs.theme === 'dark') return true;
@@ -230,12 +299,20 @@
 
   try {
     chrome.storage.local.get(
-      { selectionPopup: true, targetLang: 'tr', engine: 'auto', theme: 'auto', translateTitle: true },
+      {
+        selectionPopup: true,
+        targetLang: 'tr',
+        engine: 'auto',
+        theme: 'auto',
+        uiLang: 'auto',
+        translateTitle: true
+      },
       (stored) => {
         selectionPrefs.enabled = typeof stored.selectionPopup === 'boolean' ? stored.selectionPopup : true;
         selectionPrefs.targetLang = stored.targetLang || 'tr';
         selectionPrefs.engine = stored.engine || 'auto';
         selectionPrefs.theme = stored.theme || 'auto';
+        selectionPrefs.uiLang = stored.uiLang || 'auto';
         selectionPrefs.translateTitle =
           typeof stored.translateTitle === 'boolean' ? stored.translateTitle : true;
         activeThemeTarget?.();
@@ -256,6 +333,9 @@
       if (changes.theme) {
         selectionPrefs.theme = changes.theme.newValue || 'auto';
         activeThemeTarget?.();
+      }
+      if (changes.uiLang) {
+        selectionPrefs.uiLang = changes.uiLang.newValue || 'auto';
       }
       if (changes.translateTitle) {
         selectionPrefs.translateTitle = Boolean(changes.translateTitle.newValue);
@@ -451,7 +531,7 @@
     const btn = document.createElement('button');
     btn.className = 'pill' + (resolveIsDark() ? ' dark' : '');
     btn.type = 'button';
-    btn.innerHTML = `${ICON_TRANSLATE}<span>Çevir</span>`;
+    btn.innerHTML = `${ICON_TRANSLATE}<span>${ct('translate')}</span>`;
 
     activeThemeTarget = () => {
       btn.classList.toggle('dark', resolveIsDark());
@@ -830,7 +910,7 @@
 
     const srcBadge = document.createElement('span');
     srcBadge.className = 'code-pill muted';
-    srcBadge.textContent = currentDetectedSource ? currentDetectedSource.toUpperCase() : 'OTO';
+    srcBadge.textContent = currentDetectedSource ? currentDetectedSource.toUpperCase() : ct('autoSrc');
 
     const arrow = document.createElement('span');
     arrow.className = 'arrow';
@@ -845,16 +925,19 @@
     selectMenu.className = 'select-menu hidden';
 
     function renderCardSelect() {
+      const ui = resolveUiLang();
       const active = CARD_LANGS.find(([c]) => c === currentTargetLang) || CARD_LANGS[0];
+      const activeLabel = active[2][ui] || active[2].en;
       selectTrigger.innerHTML = `
         <span class="select-trigger-left">
           <span class="code-pill">${active[1]}</span>
-          <span>${active[2]}</span>
+          <span>${activeLabel}</span>
         </span>
         ${ICON_CHEVRONS}
       `;
       selectMenu.innerHTML = '';
-      for (const [code, shortCode, label] of CARD_LANGS) {
+      for (const [code, shortCode, labels] of CARD_LANGS) {
+        const label = labels[ui] || labels.en;
         const opt = document.createElement('button');
         opt.type = 'button';
         opt.className = 'select-opt' + (code === currentTargetLang ? ' selected' : '');
@@ -894,8 +977,8 @@
     const topbarRight = document.createElement('div');
     topbarRight.className = 'topbar-right';
     topbarRight.innerHTML = `
-      <span class="engine-pill" id="enginePill">Çevriliyor</span>
-      <button class="icon-btn" id="closeBtn" type="button" title="Kapat (Esc)">${ICON_CLOSE}</button>
+      <span class="engine-pill" id="enginePill">${ct('translating')}</span>
+      <button class="icon-btn" id="closeBtn" type="button" title="${ct('close')}">${ICON_CLOSE}</button>
     `;
 
     topbar.append(route, topbarRight);
@@ -942,7 +1025,7 @@
           <div class="phonetic" id="phoneticEl" style="display:none"></div>
         </div>
         <div class="row-actions">
-          <button class="icon-btn" id="speakSrcBtn" type="button" title="Dinle">${ICON_SPEAK}</button>
+          <button class="icon-btn" id="speakSrcBtn" type="button" title="${ct('listen')}">${ICON_SPEAK}</button>
         </div>
       </div>
       <div class="hairline"></div>
@@ -951,8 +1034,8 @@
           <div class="trg-text" id="trgTextEl"><div class="skeleton"></div></div>
         </div>
         <div class="row-actions">
-          <button class="icon-btn" id="speakTrgBtn" type="button" title="Çeviriyi Dinle">${ICON_SPEAK}</button>
-          <button class="icon-btn" id="copyBtn" type="button" title="Kopyala">${ICON_COPY}</button>
+          <button class="icon-btn" id="speakTrgBtn" type="button" title="${ct('listenTrg')}">${ICON_SPEAK}</button>
+          <button class="icon-btn" id="copyBtn" type="button" title="${ct('copy')}">${ICON_COPY}</button>
         </div>
       </div>
     `;
@@ -1021,12 +1104,12 @@
 
     function renderResult(res) {
       if (!res?.ok) {
-        enginePill.textContent = 'Hata';
+        enginePill.textContent = ct('error');
         enginePill.className = 'engine-pill';
         trgTextEl.innerHTML = '';
         const err = document.createElement('div');
         err.className = 'err-text';
-        err.textContent = res?.error || 'Çeviri yapılamadı.';
+        err.textContent = res?.error || ct('translateFail');
         trgTextEl.appendChild(err);
         dictCard.innerHTML = '';
         dictCard.classList.add('hidden');
@@ -1036,7 +1119,7 @@
 
       currentTranslation = res.translated || '';
       currentDetectedSource = res.detectedSource || '';
-      srcBadge.textContent = currentDetectedSource ? currentDetectedSource.toUpperCase() : 'OTO';
+      srcBadge.textContent = currentDetectedSource ? currentDetectedSource.toUpperCase() : ct('autoSrc');
 
       if (res.usedEngine === 'apple') {
         enginePill.innerHTML = '<span class="engine-dot"></span><span>Apple</span>';
@@ -1057,12 +1140,13 @@
       dictCard.innerHTML = '';
 
       if (Array.isArray(res.dict) && res.dict.length > 0) {
+        const posMap = POS_LABELS[resolveUiLang()] || POS_LABELS.en;
         for (const group of res.dict) {
           const groupEl = document.createElement('div');
           groupEl.className = 'dict-group';
           const label = document.createElement('div');
           label.className = 'pos-label';
-          label.textContent = POS_TR[group.pos.toLowerCase()] || group.pos;
+          label.textContent = posMap[group.pos.toLowerCase()] || group.pos;
 
           const chips = document.createElement('div');
           chips.className = 'chips';
@@ -1071,7 +1155,7 @@
             chip.type = 'button';
             chip.className = 'chip';
             chip.textContent = term;
-            chip.title = 'Kopyalamak için tıklayın';
+            chip.title = ct('clickToCopy');
             chip.addEventListener('click', async () => {
               try {
                 await navigator.clipboard.writeText(term);
@@ -1104,7 +1188,7 @@
       trgTextEl.innerHTML = '<div class="skeleton"></div>';
       dictCard.innerHTML = '';
       dictCard.classList.add('hidden');
-      enginePill.textContent = 'Çevriliyor';
+      enginePill.textContent = ct('translating');
       enginePill.className = 'engine-pill';
       try {
         const res = await chrome.runtime.sendMessage({
@@ -1117,7 +1201,7 @@
         if (host.isConnected) renderResult(res);
       } catch (err) {
         if (host.isConnected) {
-          renderResult({ ok: false, error: err?.message || 'Bağlantı hatası' });
+          renderResult({ ok: false, error: err?.message || ct('connError') });
         }
       }
     }
@@ -1426,7 +1510,7 @@
     });
 
     if (showFeedback) {
-      showToast('Orijinal sayfaya dönüldü', 1800);
+      showToast(ct('revertedToast'), 1800);
     }
   }
 
@@ -1510,20 +1594,20 @@
       });
 
       if (showFeedback) {
-        const engineLabel = state.usedEngine === 'apple' ? 'Apple Yerel' : 'Google';
-        showToast(`Sayfa çevrildi (${engineLabel} • ${state.translatedNodes.size} metin) ✓`, 2400);
+        const engineLabel = state.usedEngine === 'apple' ? ct('appleLabel') : ct('googleLabel');
+        showToast(ct('translatedToast')(engineLabel, state.translatedNodes.size), 2400);
       }
     } catch (err) {
       if (state.runId !== runId) return;
       state.isTranslating = false;
-      state.lastError = err?.message || 'Çeviri başarısız oldu';
+      state.lastError = err?.message || ct('translateFail');
       setBadge(state.translatedNodes.size > 0 ? 'translated' : 'idle');
       notifyPopup({
         type: 'TRANSLATION_ERROR',
         error: state.lastError
       });
       if (showFeedback) {
-        showToast(`Hata: ${state.lastError}`, 3200);
+        showToast(ct('errorToast')(state.lastError), 3200);
       }
     }
   }
