@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anında Çeviri</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="brand">
+        <img src="icons/icon48.png" alt="" class="logo" />
+        <div class="brand-meta">
+          <h1 class="title">Anında Çeviri</h1>
+          <div class="status-line">
+            <span id="statusDot" class="dot"></span>
+            <span id="engineStatusText">Kontrol ediliyor</span>
+          </div>
+        </div>
+      </div>
+      <span class="kbd-group" title="Hızlı Kısayol"><kbd>⌥</kbd><kbd>⇧</kbd><kbd>T</kbd></span>
+    </header>
+
+    <!-- 3-Way Sliding Navigation -->
+    <nav id="tabSegment" class="nav-tabs" data-index="0" role="tablist">
+      <span class="nav-tab-thumb" aria-hidden="true"></span>
+      <button id="tabPageBtn" class="nav-tab active" data-tab="page" type="button" role="tab" aria-selected="true">Sayfa</button>
+      <button id="tabQuickBtn" class="nav-tab" data-tab="quick" type="button" role="tab" aria-selected="false">Sözlük</button>
+      <button id="tabSettingsBtn" class="nav-tab" data-tab="settings" type="button" role="tab" aria-selected="false">Ayarlar</button>
+    </nav>
+
+    <!-- Page Translation Tab -->
+    <section id="panelPage" class="panel">
+      <div class="group-card">
+        <div class="group-row stack">
+          <div class="row-head">
+            <span class="row-label">Motor</span>
+            <span id="engineHint" class="row-hint">Önce Apple Yerel, yoksa Google</span>
+          </div>
+          <div id="engineSegment" class="segmented" data-index="0">
+            <span class="seg-thumb" aria-hidden="true"></span>
+            <button type="button" class="seg-btn active" data-engine="auto">Akıllı</button>
+            <button type="button" class="seg-btn" data-engine="apple">Apple Yerel</button>
+            <button type="button" class="seg-btn" data-engine="google">Google</button>
+          </div>
+        </div>
+
+        <div class="hairline"></div>
+
+        <div class="group-row inline">
+          <span class="row-label">Hedef Dil</span>
+          <div id="langSelect" class="custom-select">
+            <button id="langTrigger" class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span id="langCodePill" class="code-pill">TR</span>
+              <span id="langLabelText" class="select-value">Türkçe</span>
+              <svg class="chevrons" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 6.2 8 3.5l3 2.7" />
+                <path d="M5 9.8 8 12.5l3-2.7" />
+              </svg>
+            </button>
+            <div id="langMenu" class="select-menu hidden" role="listbox"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="translatedBanner" class="state-pill hidden">
+        <span class="state-dot"></span>
+        <span id="translatedBannerText">Sayfa çevrildi</span>
+      </div>
+
+      <button id="actionBtn" class="btn btn-primary" type="button">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" />
+          <path d="m22 22-5-10-5 10" /><path d="M14 18h6" />
+        </svg>
+        <span id="actionBtnText">Sayfayı Çevir</span>
+      </button>
+
+      <div id="progressWrap" class="progress-wrap hidden">
+        <div class="progress-track">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <span id="progressText" class="progress-text">%0</span>
+      </div>
+
+      <div id="messageBox" class="notice hidden"></div>
+    </section>
+
+    <!-- Quick Dictionary Tab -->
+    <section id="panelQuick" class="panel hidden">
+      <div class="group-card quick-card">
+        <textarea
+          id="quickInput"
+          class="quick-textarea"
+          rows="3"
+          placeholder="Kelime veya cümle yazın…"
+        ></textarea>
+        <div class="quick-bar">
+          <span class="quick-shortcut"><kbd>⌘</kbd><kbd>↵</kbd></span>
+          <div class="quick-btns">
+            <button id="quickClearBtn" class="ghost-btn hidden" type="button">Temizle</button>
+            <button id="quickTranslateBtn" class="btn btn-primary btn-xs" type="button">Çevir</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="quickResultCard" class="group-card result-card hidden">
+        <div class="res-head">
+          <div class="res-meta">
+            <span id="quickSrcBadge" class="code-pill muted">OTO</span>
+            <span id="quickPhonetic" class="phonetic hidden"></span>
+          </div>
+          <div class="res-actions">
+            <button id="quickSpeakBtn" class="icon-btn" type="button" title="Sesli Dinle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </button>
+            <button id="quickCopyBtn" class="icon-btn" type="button" title="Kopyala">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="quickTranslation" class="res-text"></div>
+        <div id="quickDict" class="quick-dict"></div>
+      </div>
+
+      <p id="quickError" class="notice hidden"></p>
+    </section>
+
+    <!-- Settings Tab -->
+    <section id="panelSettings" class="panel hidden">
+      <div class="group-card">
+        <div class="group-row stack">
+          <div class="row-head">
+            <span class="row-label">Görünüm</span>
+            <span id="themeHint" class="row-hint">Sistem teması</span>
+          </div>
+          <div id="themeSegment" class="segmented" data-index="0">
+            <span class="seg-thumb" aria-hidden="true"></span>
+            <button type="button" class="seg-btn active" data-theme-choice="auto">Sistem</button>
+            <button type="button" class="seg-btn" data-theme-choice="light">Açık</button>
+            <button type="button" class="seg-btn" data-theme-choice="dark">Koyu</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-card">
+        <label class="group-row switch-row">
+          <div class="switch-copy">
+            <span class="switch-title">Dinamik içerik takibi</span>
+            <span class="switch-sub">Kaydırdıkça yeni metinleri çevir</span>
+          </div>
+          <span class="switch">
+            <input id="autoObserve" type="checkbox" checked />
+            <span class="slider"></span>
+          </span>
+        </label>
+
+        <div class="hairline"></div>
+
+        <label class="group-row switch-row">
+          <div class="switch-copy">
+            <span class="switch-title">Seçili kelime balonu</span>
+            <span class="switch-sub">Metin seçince çeviri balonu göster</span>
+          </div>
+          <span class="switch">
+            <input id="selectionPopup" type="checkbox" checked />
+            <span class="slider"></span>
+          </span>
+        </label>
+
+        <div class="hairline"></div>
+
+        <label class="group-row switch-row">
+          <div class="switch-copy">
+            <span class="switch-title">Sekme başlığını çevir</span>
+            <span class="switch-sub">Tarayıcı sekme başlığını da güncelle</span>
+          </div>
+          <span class="switch">
+            <input id="translateTitle" type="checkbox" checked />
+            <span class="slider"></span>
+          </span>
+        </label>
+      </div>
+
+      <div id="packsCard" class="group-card hidden">
+        <button id="openPacksBtn" class="group-row nav-row" type="button">
+          <span class="row-label">Apple Çevrimdışı Dilleri</span>
+          <span class="nav-right">
+            <span id="packsSummary" class="nav-meta">Kontrol ediliyor</span>
+            <svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 3.5 4.5 4.5L6 12.5" />
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <div id="bridgeSetupCard" class="group-card bridge-card hidden">
+        <div class="group-row stack">
+          <div class="row-head">
+            <span class="row-label">Apple Yerel Köprüsü (Mac)</span>
+            <span class="row-hint">Kurulu değil</span>
+          </div>
+          <p class="bridge-desc">
+            Çevrimdışı Apple Çeviri için aşağıdaki tek komutu Mac Terminal'e yapıştırıp çalıştırın:
+          </p>
+          <code id="bridgeCmdText" class="bridge-cmd">curl -fsSL https://raw.githubusercontent.com/imhalid/aninda-ceviri/main/install-bridge.sh | bash</code>
+          <div class="bridge-actions">
+            <button id="copyBridgeBtn" class="btn btn-primary btn-xs" type="button">Komutu Kopyala</button>
+            <button id="recheckBridgeBtn" class="btn btn-secondary btn-xs" type="button">Bağlantıyı Test Et</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Apple Language Packs Sub-Panel -->
+    <section id="panelPacks" class="panel hidden">
+      <div class="packs-header">
+        <button id="packsBackBtn" class="back-btn" type="button">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 3.5 5.5 8 10 12.5" />
+          </svg>
+          <span>Ayarlar</span>
+        </button>
+        <span class="packs-title">Çevrimdışı Diller</span>
+        <div class="packs-header-actions">
+          <button id="packsRefreshBtn" class="icon-btn" type="button" title="Durumu Yenile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+          </button>
+          <button id="packsSettingsBtn" class="ghost-btn" type="button">Sistem</button>
+        </div>
+      </div>
+
+      <p id="packsSub" class="packs-sub">
+        İndirilen diller internet olmadan Apple Silicon üzerinde çalışır.
+      </p>
+
+      <div id="packsList" class="group-card packs-list"></div>
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+.DS_Store
+native-host/apple-translator
+native-host/AppleLanguageDownloader.app/Contents/MacOS/
+*.o
+*.dSYM/
