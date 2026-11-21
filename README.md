@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <strong>Türkçe</strong> · <a href="README.en.md">English</a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Chrome-Manifest%20V3-1d1d1f?style=flat-square&logo=googlechrome&logoColor=white" alt="Manifest V3" />
   <img src="https://img.shields.io/badge/macOS%2015%2B-Apple%20Translation-28a745?style=flat-square&logo=apple&logoColor=white" alt="Apple Translation" />
   <img src="https://img.shields.io/badge/API%20Key-Gerekmez-6e6e73?style=flat-square" alt="No API Key" />
