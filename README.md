@@ -32,6 +32,32 @@
 
 ---
 
+## Ekran Görüntüleri
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="screenshots/popup-page-light.png" alt="Sayfa Çevirisi (Açık Tema)" width="260" /><br />
+      <sub><b>Sayfa Çevirisi (Açık Tema)</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="screenshots/popup-dict-dark.png" alt="Hızlı Sözlük (Koyu Tema)" width="260" /><br />
+      <sub><b>Hızlı Sözlük (Koyu Tema)</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="screenshots/popup-packs-light.png" alt="Apple Çevrimdışı Dilleri" width="260" /><br />
+      <sub><b>Apple Çevrimdışı Dilleri</b></sub>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="screenshots/inpage-popover.png" alt="Sayfa İçi Kelime ve Sözlük Popover'ı" width="640" /><br />
+  <sub><b>Sayfa İçi Kelime & Sözlük Popover'ı</b></sub>
+</p>
+
+---
+
 ## Kurulum (1 Dakika)
 
 ### 1. Eklentiyi Chrome'a Yükleyin
@@ -110,6 +136,7 @@ aninda-ceviri/
 │   ├── main.swift                        # Native Messaging Swift host (NaturalLanguage + Translation)
 │   ├── downloader.swift                  # Resmi sistem dil indirme onay penceresi
 │   └── AppleLanguageDownloader.app/      # Uygulama paketi yapılandırması (Info.plist)
+├── screenshots/                          # Arayüz ekran görüntüleri
 └── icons/                                # Uzantı ikonları (16, 48, 128 px)
 ```
 
